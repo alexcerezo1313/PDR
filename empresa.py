@@ -65,19 +65,66 @@ def pagina_introduccio():
 def pagina_requeriments_legals():
     st.header("1. Requeriments Legals")
     st.markdown("**Què és la forma jurídica?** La forma jurídica determina la responsabilitat legal i la manera fiscal de l'empresa.")
-    st.markdown("- **Societat Limitada (SL):** responsabilitat limitada al capital aportat.")
-    st.markdown("- **Societat Anònima (SA):** capital social més elevat, accions transferibles.")
-    st.markdown("- **Autònom:** responsabilitat il·limitada, ideal per activitats individuals.")
-    st.markdown("**Permisos i llicències**: autoritzacions administratives per operar. Alguns exemples:")
-    st.markdown("- **Llicència d'obertura** per establiments.")
-    st.markdown("- **Permisos sanitaris** per activitats alimentàries.")
-    st.markdown("- **Autorització mediambiental** per activitats amb impacte.")
-    st.markdown("**Protecció de dades i propietat intel·lectual**: cal complir la normativa de privacitat i registrar marques/patents.")
-    # Documents descarregables
-    privacy_doc = """[NOM EMPRESA]\nPolítica de privacitat i protecció de dades.\nResponsable del tractament: [Nom].\nFinalitats: gestió administrativa, comunicacions.\nDrets: accés, rectificació, supressió.\n..."""
-    ip_doc = """[NOM EMPRESA]\nAcord de cessió de drets de propietat intel·lectual.\nParties: [Nom Empresa] i [Col·laborador].\nObjecte: creacions originals, software, dissenys.\n..."""
-    st.download_button("Descarrega Acord Protecció de Dades", privacy_doc, file_name="proteccio_dades.txt")
-    st.download_button("Descarrega Acord Propietat Intel·lectual", ip_doc, file_name="propietat_intellectual.txt")
+    st.markdown("- **Societat Limitada (SL):** responsabilitat limitada al capital aportat, capital mínim 3.000€. Ideal per pimes.")
+    st.markdown("- **Societat Anònima (SA):** capital mínim 60.000€, accions transferibles. Recomanada per grans inversions.")
+    st.markdown("- **Autònom:** responsabilitat il·limitada, gestió simplificada. Apte per professionals independents.")
+    st.markdown("**Permisos i llicències**: autoritzacions administratives per operar segons activitat i ubicació. Alguns exemples:")
+    st.markdown("- **Llicència d'obertura:** permís municipal per establiments.")
+    st.markdown("- **Permisos sanitaris:** obligatoris per manipulació d'aliments o activitats sanitàries.")
+    st.markdown("- **Autorització mediambiental:** per activitats amb impacte ambiental, regulada per la Generalitat.")
+    st.markdown("**Protecció de dades i propietat intel·lectual**: cal complir el RGPD i registrar marques/patents al OEPM.")
+    # Document detallat descarregable
+    detall_doc = """
+DOCUMENT DE REFERÈNCIA: REQUERIMENTS LEGALS
+
+1. FORMES JURÍDIQUES
+
+Societat Limitada (SL)
+- Capital mínim: 3.000€.
+- Responsabilitat: limitada al capital.
+- Constitució: escriptura pública i registre mercantil.
+
+Societat Anònima (SA)
+- Capital mínim: 60.000€.
+- Responsabilitat: limitada.
+- Accions: lliurement transmissibles.
+
+Autònom
+- Responsabilitat: il·limitada.
+- Simplificació: menor burocràcia.
+
+2. PERMISOS I LLICÈNCIES
+
+Llicència d'obertura
+- Emesa per l’ajuntament.
+- Tipus segons activitat.
+
+Permisos sanitaris
+- Obligatori per activitats alimentàries.
+- Expedients al Departament de Salut.
+
+Autorització mediambiental
+- Per a activitats amb emissions o residus.
+- Tràmits al Departament de Medi Ambient.
+
+3. PROTECCIÓ DE DADES
+
+- RGPD i LOPDGDD.
+- Obligacions: registre de tractaments, polítiques de privacitat.
+- Drets: accés, rectificació, supressió.
+
+4. PROPIETAT INTEL·LECTUAL
+
+- Registre de marques al OEPM.
+- Patents d’invencions.
+- Models d’utilitat i dissenys industrials.
+"""
+    st.download_button(
+        "Descarrega Requeriments Legals detallats (PDF)",
+        detall_doc,
+        file_name="requeriments_legals.pdf",
+        mime="application/pdf"
+    )
     forma = st.selectbox(
         "Forma jurídica:",
         ["Societat Limitada (SL)", "Societat Anònima (SA)", "Autònom"],
@@ -143,6 +190,6 @@ def pagina_personal():
     )
     st.session_state.perfils = perfils
     st.markdown("**Perfils detallats:**\n- Desenvolupador: disseny i manteniment del producte.\n- Comercial: vendes i relacions amb clients.\n- Administratiu: gestió financera i documental.\n- Operacions: logística i producció.")
-    st.markdown("**Gestió de nòmines i cotitzacions:**\nLes nòmines inclouen salari brut i ret```
-
-
+        st.markdown("""**Gestió de nòmines i cotitzacions:**
+Les nòmines inclouen salari brut i retencions d'IRPF.
+L'empresa cotitza a la Seguretat Social (~30% del salari brut).""")
