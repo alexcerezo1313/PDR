@@ -47,9 +47,10 @@ st.sidebar.title("Navegació")
 selection = st.sidebar.radio(
     "Passos:",
     PAGES,
-    index=st.session_state.page,
-    key='page'
+    index=st.session_state.page
 )
+# Actualitzar pàgina en funció de la selecció
+st.session_state.page = PAGES.index(selection)
 st.sidebar.write(f"Pàgina {st.session_state.page+1} de {len(PAGES)}")
 
 # Pàgina 1: Introducció
@@ -80,9 +81,10 @@ def pagina_requeriments_legals():
     forma = st.selectbox(
         "Forma jurídica:",
         ["Societat Limitada (SL)", "Societat Anònima (SA)", "Autònom"],
-        key='forma'
+        index=["Societat Limitada (SL)","Societat Anònima (SA)","Autònom"].index(st.session_state.forma) if st.session_state.forma else 0
     )
-    st.write(f"Has seleccionat: **{st.session_state.forma or forma}**")
+    st.session_state.forma = forma
+    st.write(f"Has seleccionat: **{st.session_state.forma}**")
     if st.button("Continuar"):
         next_page()
 
@@ -91,8 +93,9 @@ def pagina_capital():
     st.header("2. Capital i Finançament")
     st.markdown("Introdueix el capital obtingut (es recordarà en tot el procés):")
     capital = st.number_input(
-        "Capital obtingut (€):", min_value=0.0, value=st.session_state.capital, step=100.0, key='capital'
+        "Capital obtingut (€):", min_value=0.0, value=st.session_state.capital, step=100.0
     )
+    st.session_state.capital = capital
     if capital > 0:
         st.write("### Recomanació d'assignació de fons")
         st.write(f"- **Inversions fixes** (50%): {capital * 0.5:.2f} €")
@@ -112,10 +115,11 @@ def pagina_capital():
 def pagina_idea_mercat():
     st.header("3. Idea i Mercat")
     st.markdown("Descriu la teva idea:")
-    idea = st.text_input("Quina és la teva idea?", value=st.session_state.idea, key='idea')
+    idea = st.text_input("Quina és la teva idea?", value=st.session_state.idea)
+    st.session_state.idea = idea
     st.markdown("Selecciona competidors clau:")
     opcions = ["Competidor A", "Competidor B", "Competidor C"]
-    competidors_raw = st.multiselect("Competidors predefinits:", opcions)
+    competidors_raw = st.multiselect("Competidors predefinits:", opcions, default=st.session_state.competidors)
     competidors = []
     for i, comp in enumerate(competidors_raw):
         nom = st.text_input(f"Nom competidor {i+1}", value=comp, key=f"comp_{i}")
@@ -123,8 +127,9 @@ def pagina_idea_mercat():
     st.session_state.competidors = competidors
     st.markdown("**Guia per redactar la teva idea:**\n1. Defineix el problema.\n2. Explica la solució.\n3. Valor diferencial.")
     market = st.selectbox(
-        "Estat del mercat:", ["Saturat", "Normal", "En auge"], index=["Saturat","Normal","En auge"].index(st.session_state.market) if st.session_state.market else 1, key='market'
+        "Estat del mercat:", ["Saturat", "Normal", "En auge"], index=["Saturat","Normal","En auge"].index(st.session_state.market) if st.session_state.market else 1
     )
+    st.session_state.market = market
     if st.button("Continuar"):
         next_page()
 
@@ -135,9 +140,9 @@ def pagina_personal():
     perfils = st.multiselect(
         "Perfils necessaris:",
         ["Desenvolupador", "Comercial", "Administratiu", "Operacions"],
-        default=st.session_state.perfils,
-        key='perfils'
+        default=st.session_state.perfils
     )
+    st.session_state.perfils = perfils
     st.markdown("**Perfils detallats:**\n- Desenvolupador: disseny i manteniment del producte.\n- Comercial: vendes i relacions amb clients.\n- Administratiu: gestió financera i documental.\n- Operacions: logística i producció.")
     st.markdown("**Gestió de nòmines i cotitzacions:**\nLes nòmines inclouen salari brut i retencions d'IRPF.\nL'empresa cotitza a la Seguretat Social (~30% del salari brut).")
     if st.button("Continuar"):
@@ -151,9 +156,9 @@ def pagina_escalabilitat():
         "Nombre de punts de delegació previstos:",
         min_value=1,
         value=st.session_state.delegations,
-        step=1,
-        key='delegations'
+        step=1
     )
+    st.session_state.delegations = deleg
     st.write(f"Has planificat {deleg} punts de delegació.")
     st.markdown("L'ús de tecnologia (ERP, CRM, automatització) facilita l'expansió sense augmentar costos lineals.")
     if st.button("Continuar"):
@@ -184,4 +189,3 @@ func_map = {
 }
 
 func_map[selection]()
-
