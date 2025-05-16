@@ -119,7 +119,7 @@ def pagina_idea_mercat():
     st.session_state.idea = idea
     st.markdown("Selecciona competidors clau:")
     opcions = ["Competidor A", "Competidor B", "Competidor C"]
-    competidors_raw = st.multiselect("Competidors predefinits:", opcions, default=st.session_state.competidors)
+    competidors_raw = st.multiselect("Competidors predefinits:", opcions)
     competidors = []
     for i, comp in enumerate(competidors_raw):
         nom = st.text_input(f"Nom competidor {i+1}", value=comp, key=f"comp_{i}")
@@ -139,53 +139,8 @@ def pagina_personal():
     st.markdown("**Organigrama típic d'una empresa:**\nCEO\n├─ CTO\n├─ CFO\n└─ COO")
     perfils = st.multiselect(
         "Perfils necessaris:",
-        ["Desenvolupador", "Comercial", "Administratiu", "Operacions"],
-        default=st.session_state.perfils
+        ["Desenvolupador", "Comercial", "Administratiu", "Operacions"]
     )
     st.session_state.perfils = perfils
     st.markdown("**Perfils detallats:**\n- Desenvolupador: disseny i manteniment del producte.\n- Comercial: vendes i relacions amb clients.\n- Administratiu: gestió financera i documental.\n- Operacions: logística i producció.")
-    st.markdown("**Gestió de nòmines i cotitzacions:**\nLes nòmines inclouen salari brut i retencions d'IRPF.\nL'empresa cotitza a la Seguretat Social (~30% del salari brut).")
-    if st.button("Continuar"):
-        next_page()
-
-# Pàgina 6: Escalabilitat
-def pagina_escalabilitat():
-    st.header("5. Escalabilitat")
-    st.markdown("Planificar la delegació consisteix a assignar tasques a responsables o nous departaments.")
-    deleg = st.number_input(
-        "Nombre de punts de delegació previstos:",
-        min_value=1,
-        value=st.session_state.delegations,
-        step=1
-    )
-    st.session_state.delegations = deleg
-    st.write(f"Has planificat {deleg} punts de delegació.")
-    st.markdown("L'ús de tecnologia (ERP, CRM, automatització) facilita l'expansió sense augmentar costos lineals.")
-    if st.button("Continuar"):
-        next_page()
-
-# Pàgina 7: Altres Aspectes Clau (Resum)
-def pagina_altres_aspectes():
-    st.header("6. Resum Final")
-    st.markdown("Revisa totes les dades introduïdes:")
-    if st.button("Mostrar Resum"):
-        st.write(f"- **Forma jurídica:** {st.session_state.forma}")
-        st.write(f"- **Capital obtingut:** {st.session_state.capital} €")
-        st.write(f"- **Idea:** {st.session_state.idea}")
-        st.write(f"- **Competidors:** {', '.join(st.session_state.competidors)}")
-        st.write(f"- **Estat del mercat:** {st.session_state.market}")
-        st.write(f"- **Perfils:** {', '.join(st.session_state.perfils)}")
-        st.write(f"- **Delegacions previstes:** {st.session_state.delegations}")
-
-# Mapejar i mostrar
-func_map = {
-    "Introducció": pagina_introduccio,
-    "Requeriments Legals": pagina_requeriments_legals,
-    "Capital i Finançament": pagina_capital,
-    "Idea i Mercat": pagina_idea_mercat,
-    "Personal": pagina_personal,
-    "Escalabilitat": pagina_escalabilitat,
-    "Altres Aspectes Clau": pagina_altres_aspectes
-}
-
-func_map[selection]()
+    st.markdown("**Gestió de nòmines i cotitzacions:**\nLes nòmines inclouen salari brut i ret```
