@@ -204,7 +204,6 @@ def pagina_altres_aspectes():
     st.markdown(
         "Genera un informe complet de la teva emprenedoria amb tota la informació introduïda."
     )
-    # Generació de PDF mitjançant ReportLab
     import io
     from reportlab.lib.pagesizes import letter
     from reportlab.pdfgen import canvas
@@ -220,10 +219,10 @@ def pagina_altres_aspectes():
     # Resum de forma jurídica
     c.drawString(50, y, f"Forma jurídica: {st.session_state.forma}")
     y -= 20
-        # Idea detallada
+    # Idea detallada
     c.drawString(50, y, "Idea de negoci:")
     y -= 15
-        text = st.session_state.detailed_idea or "-"
+    text = st.session_state.detailed_idea or "-"
     for line in text.split("
 "):
         if y < 50:
@@ -237,7 +236,8 @@ def pagina_altres_aspectes():
         y -= 15
         for i, nom in enumerate(st.session_state.competidors):
             if y < 50:
-                c.showPage(); y = height - 50
+                c.showPage()
+                y = height - 50
             c.drawString(60, y, f"{i+1}. {nom}")
             y -= 15
             c.drawString(70, y, f"Fortaleses: {st.session_state.forca[i]}")
@@ -246,7 +246,8 @@ def pagina_altres_aspectes():
             y -= 20
     # Estat del mercat
     if y < 50:
-        c.showPage(); y = height - 50
+        c.showPage()
+        y = height - 50
     c.drawString(50, y, f"Estat del mercat: {st.session_state.market}")
     y -= 20
     # Punt mort i finançament
@@ -256,13 +257,14 @@ def pagina_altres_aspectes():
         if st.session_state.all_self == "Tot propi":
             c.drawString(50, y, "Assignació 50/30/20: inversions/fons maniobra/reserves.")
         else:
-            c.drawString(50, y, f"Percentatge propi: {st.session_state.part_percent}% propis. Resta de finançament extern.")
+            c.drawString(50, y, f"Percentatge propi: {st.session_state.part_percent}% propis. Resta finançament extern.")
     else:
         c.drawString(50, y, "Fonts externes: préstecs, subvencions, business angels, crowdfunding.")
     y -= 30
     # Organització de l'empresa
     if y < 50:
-        c.showPage(); y = height - 50
+        c.showPage()
+        y = height - 50
     c.drawString(50, y, "Organització i rols assignats:")
     y -= 15
     roles = [
@@ -275,7 +277,8 @@ def pagina_altres_aspectes():
     ]
     for title, person in roles:
         if y < 50:
-            c.showPage(); y = height - 50
+            c.showPage()
+            y = height - 50
         c.drawString(60, y, f"{title}: {person}")
         y -= 15
     # Consells finals
@@ -299,7 +302,8 @@ def pagina_altres_aspectes():
     c.setFont("Helvetica", 12)
     for line in consells:
         if y < 50:
-            c.showPage(); y = height - 50
+            c.showPage()
+            y = height - 50
         c.drawString(60, y, line)
         y -= 15
     c.save()
@@ -310,6 +314,7 @@ def pagina_altres_aspectes():
         file_name="informe_emprenedoria.pdf",
         mime="application/pdf"
     )
+
 # Execució final
 func_map = {
     "Introducció": pagina_introduccio,
