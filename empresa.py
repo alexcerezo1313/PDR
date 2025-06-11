@@ -126,10 +126,15 @@ def pagina_capital():
         "• Subvencions: ajuts públics.\n"
         "• Crowdfunding: campanyes col·lectives."
     )
-    guia_fin = """
-GUIA FINANÇAMENT - PAS A PAS
-1. Pla de negoci complet.\n2. Contacte bancari amb dossier.\n3. Pitch a inversors.\n4. Sol·licitud ajuts.\n5. Campanya crowdfunding."
+        guia_fin = """GUIA FINANÇAMENT - PAS A PAS
+1. Pla de negoci complet.
+2. Contacte bancari amb dossier.
+3. Pitch a inversors.
+4. Sol·licitud ajuts.
+5. Campanya crowdfunding.
+"""
     st.download_button("Descarrega Guia Finançament (PDF)", guia_fin,
+                       file_name="guia_financament.pdf", mime="application/pdf") (PDF)", guia_fin,
                        file_name="guia_financament.pdf", mime="application/pdf")
     if st.button("Continuar"):
         next_page()
