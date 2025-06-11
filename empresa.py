@@ -223,7 +223,7 @@ def pagina_altres_aspectes():
         # Idea detallada
     c.drawString(50, y, "Idea de negoci:")
     y -= 15
-    text = st.session_state.detailed_idea or "-"
+        text = st.session_state.detailed_idea or "-"
     for line in text.split("
 "):
         if y < 50:
