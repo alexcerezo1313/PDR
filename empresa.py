@@ -21,6 +21,7 @@ def init_state():
     defaults = {
         'page': 0,
         'forma': "",
+        'idea_summary': "",
         'detailed_idea': "",
         'num_competidors': 0,
         'competidors': [],
@@ -38,16 +39,12 @@ def init_state():
         'dir_prod': "",
         'resp_magatzem': ""
     }
-    for key, val in defaults.items():
-        if key not in st.session_state:
-            st.session_state[key] = val
+    for k, v in defaults.items():
+        if k not in st.session_state:
+            st.session_state[k] = v
 init_state()
 
 # Navegació
-
-def next_page():
-    if st.session_state.page < len(PAGES) - 1:
-        st.session_state.page += 1
 
 selection = st.sidebar.radio(
     "Passos:", PAGES, index=st.session_state.page
@@ -66,7 +63,7 @@ if selection == "Introducció":
         "És molt important l’elecció dels socis per coincidir en la visió comuna del projecte i garantir la continuïtat de l’empresa."
     )
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
 # -------- Pàgina 2: Requeriments Legals --------
 elif selection == "Requeriments Legals":
@@ -86,13 +83,29 @@ elif selection == "Requeriments Legals":
         "- CNAE (Classificació Nacional d’Activitats Econòmiques): codi d'activitat.\n"
         "- IVA i Impost de Societats: obligacions tributàries segons facturació."
     )
-    st.info("S’aconsella contractar una gestoría per portar aquests tràmits amb assessoria fiscal, laboral i legal.")
+    st.info("S’aconsella contractar una gestoría amb assessoria fiscal, laboral i legal.")
+    # PDF de Requeriments Legals
+    detall = "[Contingut PDF Requeriments Legals]"
+    st.download_button(
+        "Descarrega Requeriments Legals (PDF)",
+        detall,
+        file_name="requeriments_legals.pdf",
+        mime="application/pdf"
+    )
+    oferta = ["Autònom","SL","SA","Societat Cooperativa"]
+    st.session_state.forma = st.selectbox(
+        "Forma jurídica:", oferta,
+        index=oferta.index(st.session_state.forma) if st.session_state.forma in oferta else 0
+    )
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
 # -------- Pàgina 3: Idea i Mercat --------
 elif selection == "Idea i Mercat":
     st.header("Idea i Mercat")
+    st.session_state.idea_summary = st.text_input(
+        "Resum de la teva idea (ex: muntar una floristeria):", value=st.session_state.idea_summary
+    )
     st.session_state.detailed_idea = st.text_area(
         "Explica detalladament la teva idea de negoci i diferenciació:",
         value=st.session_state.detailed_idea,
@@ -104,9 +117,9 @@ elif selection == "Idea i Mercat":
     )
     comps, f, b = [], [], []
     for i in range(st.session_state.num_competidors):
-        comps.append(st.text_input(f"Nom competidor {i+1}", key=f"nom{i}"))
-        f.append(st.text_area(f"Punts forts competidor {i+1}", key=f"forca{i}"))
-        b.append(st.text_area(f"Punts febles competidor {i+1}", key=f"feblesa{i}"))
+        comps.append(st.text_input(f"Nom competidor {i+1}"))
+        f.append(st.text_area(f"Punts forts competidor {i+1}"))
+        b.append(st.text_area(f"Punts febles competidor {i+1}"))
     st.session_state.competidors = comps
     st.session_state.forca = f
     st.session_state.feblesa = b
@@ -123,47 +136,30 @@ elif selection == "Idea i Mercat":
     }
     st.write(descriptions[st.session_state.market])
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
 # -------- Pàgina 4: Capital i Finançament --------
 elif selection == "Capital i Finançament":
     st.header("Capital i Finançament")
-    st.markdown(
-        "**Punt mort:** volum de vendes necessari perquè el benefici sigui zero. Correspon a les despeses fixes anuals (lloguer, sou, quotes...)."
-    )
-    st.session_state.punt_mort = st.number_input(
-        "Punt mort (euros):", min_value=0.0,
-        value=st.session_state.punt_mort, step=100.0
-    )
+    st.markdown("**Punt mort:** volum de vendes necessari perquè el benefici sigui zero.")
+    st.session_state.punt_mort = st.number_input("Punt mort (euros):", value=st.session_state.punt_mort)
     have = st.radio("Tens aquest import disponible?", ["Sí", "No"])
-    st.session_state.have_punt_mort = have
     if have == "No":
         st.markdown("**Fonts de finançament:** préstecs, subvencions, business angels, crowdfunding.")
-        st.download_button(
-            "Descarrega Guia Finançament (PDF)",
-            "[Contingut PDF guia financament]",
-            file_name="guia_financament.pdf",
-            mime="application/pdf"
-        )
+        st.download_button("Descarrega Guia Finançament (PDF)", "[PDF guia financament]",
+                           file_name="guia_financament.pdf", mime="application/pdf")
     else:
         choice = st.radio("Els fons són teus o només part?", ["Tot propi", "Només part"])
-        st.session_state.all_self = choice
         if choice == "Tot propi":
             st.markdown("**Recomanació 50/30/20:** 50% inversions, 30% fons maniobra, 20% reserves.")
         else:
-            st.session_state.part_percent = st.slider(
-                "Percentatge propi (%)", 0, 100, 50
-            )
-            st.markdown(f"Cal obtenir {100 - st.session_state.part_percent}% de finançament extern.")
+            pct = st.slider("Percentatge propi (%)", 0, 100, 50)
+            st.markdown(f"Cal obtenir {100-pct}% de finançament extern.")
             st.markdown("**Fonts de finançament:** préstecs, subvencions, business angels, crowdfunding.")
-            st.download_button(
-                "Descarrega Guia Finançament (PDF)",
-                "[Contingut PDF guia financament]",
-                file_name="guia_financament.pdf",
-                mime="application/pdf"
-            )
+            st.download_button("Descarrega Guia Finançament (PDF)", "[PDF guia financament]",
+                               file_name="guia_financament.pdf", mime="application/pdf")
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
 # -------- Pàgina 5: Estructura i Organització --------
 elif selection == "Estructura i Organització":
@@ -176,34 +172,104 @@ elif selection == "Estructura i Organització":
     st.session_state.gest_personal = st.text_input("Gestió de personal:")
     st.session_state.dir_prod = st.text_input("Director de producció:")
     st.session_state.resp_magatzem = st.text_input("Responsable de magatzem:")
+    # Descarrega plantilla nòmina
+    plantilla_nomina = "[PDF plantilla nòmina]"
+    st.download_button(
+        "Descarrega Plantilla Nòmina (PDF)",
+        plantilla_nomina,
+        file_name="plantilla_nomina.pdf",
+        mime="application/pdf"
+    )
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
 # -------- Pàgina 6: Escalabilitat --------
 elif selection == "Escalabilitat":
     st.header("Escalabilitat")
     st.warning("Cal crear primer; no totes les empreses són escalables.")
     st.markdown(
-        "1. Utilitzar software per controlar processos.\n"
-        "2. Estandarditzar processos crítics.\n"
-        "3. Delegar responsabilitats.\n"
-        "4. Formació contínua.\n"
-        "5. Estructures planes (evitar massa gerents).\n"
-        "6. Establir KPI per mesurar eficiència (temps mitjà gestió avaries, servei).\n"
-        "7. Vendre a través de canals digitals i físics.\n"
-        "8. Externalitzar funcions no centrals (ex. producció de pa).\n"
-        "9. Aliances amb empreses complementàries amb clients comuns.\n"
+        "1. Utilitzar software per controlar processos.
+"
+        "2. Estandarditzar processos crítics.
+"
+        "3. Delegar responsabilitats.
+"
+        "4. Formació contínua.
+"
+        "5. Estructures planes (evitar massa gerents).
+"
+        "6. Establir KPI per mesurar eficiència.
+"
+        "7. Vendre a través de canals digitals i físics.
+"
+        "8. Externalitzar funcions no centrals.
+"
+        "9. Aliances amb empreses complementàries.
+"
         "10. Planificar recursos segons pics de demanda."
     )
+    # PDF amb consells detallats
+    consells_pdf = "[PDF Consells Escalabilitat detallats]"
+    st.download_button(
+        "Descarrega Consells d'Escalabilitat (PDF)",
+        consells_pdf,
+        file_name="consells_escalabilitat.pdf",
+        mime="application/pdf"
+    )
     if st.button("Continuar"):
-        next_page()
+        st.session_state.page += 1
 
-# -------- Pàgina 7: Altres Aspectes Clau --------
+# -------- Pàgina 7: Resum --------
 elif selection == "Altres Aspectes Clau":
-    st.header("Altres Aspectes Clau")
-    # Generació de resum i descàrrega
+    st.header("Resum")
+    # Preparar contingut per informe PDF
     lines = []
     lines.append(f"Forma jurídica: {st.session_state.forma}")
+    lines.append("Idea resumida:")
+    lines.append(st.session_state.idea_summary)
+    lines.append("Idea detallada:")
+    lines.extend(st.session_state.detailed_idea.split("
+"))
+    if st.session_state.competidors:
+        lines.append("Competidors:")
+        for i, c in enumerate(st.session_state.competidors):
+            lines.append(f"  {i+1}. {c}")
+    lines.append(f"Estat mercat: {st.session_state.market}")
+    lines.append(f"Punt mort: {st.session_state.punt_mort} €")
+    have = st.session_state.have_punt_mort
+    if have == "Sí":
+        choice = st.session_state.all_self
+        if choice == "Tot propi":
+            lines.append("Assignació 50/30/20 aplicada.")
+        else:
+            pct = st.session_state.part_percent
+            lines.append(f"% propis: {pct}%. Resta extern.")
+    else:
+        lines.append("Fonts externes necessàries.")
+    lines.append("Rols assignats:")
+    roles = [
+        ("Director administratiu", st.session_state.dir_admin),
+        ("Director financer", st.session_state.dir_fin),
+        ("Director qualitat", st.session_state.dir_qual),
+        ("Gestió personal", st.session_state.gest_personal),
+        ("Director producció", st.session_state.dir_prod),
+        ("Responsable magatzem", st.session_state.resp_magatzem)
+    ]
+    for title, person in roles:
+        lines.append(f"  {title}: {person}")
+    # PDF placeholder
+    informe_pdf = "[PDF Informe Emprenedoria detallat]"
+    st.download_button(
+        "Descarrega Informe Final (PDF)",
+        informe_pdf,
+        file_name="informe_emprenedoria.pdf",
+        mime="application/pdf"
+    ):
+    st.header("Altres Aspectes Clau")
+    lines = []
+    lines.append(f"Forma jurídica: {st.session_state.forma}")
+    lines.append("Idea resumida:")
+    lines.append(st.session_state.idea_summary)
     lines.append("Idea detallada:")
     lines.extend(st.session_state.detailed_idea.split("\n"))
     if st.session_state.competidors:
@@ -214,17 +280,19 @@ elif selection == "Altres Aspectes Clau":
     lines.append(f"Punt mort: {st.session_state.punt_mort} €")
     have = st.session_state.have_punt_mort
     if have == "Sí":
-        if st.session_state.all_self == "Tot propi":
+        choice = st.session_state.all_self
+        if choice == "Tot propi":
             lines.append("Assignació 50/30/20 aplicada.")
         else:
-            lines.append(f"% propis: {st.session_state.part_percent}%. Resta extern.")
+            pct = st.session_state.part_percent
+            lines.append(f"% propis: {pct}%. Resta extern.")
     else:
         lines.append("Fonts externes necessàries.")
     lines.append("Rols assignats:")
     roles = [
         ("Director administratiu", st.session_state.dir_admin),
         ("Director financer", st.session_state.dir_fin),
-        ("Director de qualitat", st.session_state.dir_qual),
+        ("Director qualitat", st.session_state.dir_qual),
         ("Gestió personal", st.session_state.gest_personal),
         ("Director producció", st.session_state.dir_prod),
         ("Responsable magatzem", st.session_state.resp_magatzem)
