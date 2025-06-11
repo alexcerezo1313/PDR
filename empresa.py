@@ -156,59 +156,60 @@ def pagina_idea_mercat():
 # -------- Pàgina 5 --------
 def pagina_personal():
     st.header("4. Personal")
-    # Mostra organigrama generat
+    # Imatge de l'organigrama
     st.image("organigrama.jpg", caption="Organigrama d'empresa", use_column_width=True)
-    st.markdown(
-        "**Funcions:**
-"
-        "- **CEO:** defineix visió, repr. legal, direcció estratègica.
-"
-        "- **CTO:** lidera tecnologia, R+D, infraestructura.
-"
-        "- **CFO:** gestió financera, comptabilitat, anàlisi pressupost.
-"
-        "- **COO:** coordina operacions, logística, qualitat."
-    )
+    # Funcions del directori
+    st.markdown("""
+**Funcions principals de l'organigrama:**
+
+- **CEO:** Defineix la visió i estratègia global; representació legal.
+- **CTO:** Coordina l'equip tècnic i la innovació tecnològica.
+- **CFO:** Gestiona finances, pressupostos i informes econòmics.
+- **COO:** Supervisa operacions, logística i qualitat.
+""")
+    # Perfils necessaris
     perfs = st.multiselect(
         "Perfils necessaris:",
-        ["Desenvolupador","Comercial","Administratiu","Operacions"],
+        ["Desenvolupador", "Comercial", "Administratiu", "Operacions"],
         default=st.session_state.perfils
     )
     st.session_state.perfils = perfs
-    st.markdown(
-        "**Perfils detallats:**
-"
-        "- **Desenvolupador:** arquitecte software, codifica producte, manté infraestructura.
-"
-        "- **Comercial:** estratègia vendes, CRM, fidelització client.
-"
-        "- **Administratiu:** gestió financera, facturació, tràmits legals.
-"
-        "- **Operacions:** organitza producció, magatzem, enviaments."
-    )
-    nomina = """GESTIÓ NÒMINES I COTITZACIONS
+    # Descripció detalla dels perfils
+    st.markdown("""
+**Perfils detallats i responsabilitats:**
+
+- **Desenvolupador:** Disseny arquitectònic, codificació, manteniment de software.
+- **Comercial:** Estratègia de vendes, captació i fidelització de clients.
+- **Administratiu:** Gestió administrativa, control de facturació i tràmits legals.
+- **Operacions:** Coordinació de producció, magatzem i enviaments.
+""")
+    # Document PDF de nòmines
+    nomina = """
+GESTIÓ DE NÒMINES I COTITZACIONS
 
 1. SALARI BRUT VS NET:
-   - Brut: total remuneració abans retencions.
-   - Net: import després IRPF.
+   - Salari brut: total remuneració abans de retencions.
+   - Salari net: import després de retencions d'IRPF.
 
-2. IRPF:
-   - % segons salari i situació personal.
+2. RETENCIONS IRPF:
+   - Percentatge segons salari i situació personal.
 
-3. COTITZACIONS SS:
-   - Empresa: ~30%.
-   - Treballador: ~6.35%.
+3. COTITZACIONS SEGURETAT SOCIAL:
+   - Empresa: aproximadament 30% del salari brut.
+   - Treballador: aproximadament 6.35% del salari brut.
 
-4. TIPUS CONTRACTES:
+4. TIPUS DE CONTRACTES:
    - Indefinit, temporal, formació.
 
-5. TRÀMITS TGSS:
-   - Enviament mensual de TC2.
-   - Declaracions trimestrals.
+5. TRÀMITS A LA TGSS:
+   - Enviament mensual de la declaració nominal (TC2).
+   - Declaracions trimestrals i anuals.
 """
     st.download_button(
-        "Descarrega PDF Nòmines", nomina,
-        file_name="nomines.pdf", mime="application/pdf"
+        "Descarrega Gestió de Nòmines (PDF)",
+        nomina,
+        file_name="nomines.pdf",
+        mime="application/pdf"
     )
     if st.button("Continuar"):
         next_page()
