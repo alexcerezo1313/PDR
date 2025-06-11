@@ -110,23 +110,26 @@ REQUERIMENTS LEGALS - GUIA COMPLETA
 def pagina_capital():
     st.header("2. Capital i Finançament")
     st.markdown("Introdueix el capital obtingut (de moment) i l'objectiu de capital:")
-    # Entrades de capital
-    st.session_state.capital = st.number_input(
+    # Inputs de capital actual i objectiu
+    capital = st.number_input(
         "Capital obtingut (de moment) (€):", min_value=0.0,
         value=st.session_state.capital, step=100.0
     )
-    st.session_state.target_capital = st.number_input(
+    st.session_state.capital = capital
+    target = st.number_input(
         "Capital objectiu (€):", min_value=0.0,
         value=st.session_state.target_capital, step=100.0
     )
-    # Recomanacions d'ús dels fons
-    if st.session_state.capital > 0:
+    st.session_state.target_capital = target
+
+    # Recomanacions d'assignació de fons si hi ha capital
+    if capital > 0:
         st.write("### Recomanacions d’assignació de fons:")
-        capital = st.session_state.capital
         st.write(f"- Inversions fixes (50%): {capital * 0.5:.2f} €")
         st.write(f"- Fons de maniobra (30%): {capital * 0.3:.2f} €")
         st.write(f"- Reserves i imprevistos (20%): {capital * 0.2:.2f} €")
-        # Fonts de finançament
+
+    # Fonts de finançament
     st.markdown("""
 **Fonts de finançament:**
 • Capital propi: estalvis i reinversió.
@@ -134,19 +137,21 @@ def pagina_capital():
 • Subvencions i ajuts: programes públics i europeus.
 • Crowdfunding: campanyes col·lectives.
 """)
-    # Guia de finançament per descarregar per descarregar
+
+    # Guia de finançament per descarregar
     guia_fin = """
 GUIA FINANÇAMENT - PAS A PAS
 1. Preparar un pla de negoci sòlid.
-2. Recopilar documentació financera.  
-3. Contactar amb entitats bancàries i inversors.  
-4. Sol·licitar subvencions i ajuts públics.  
-5. Llançar campanya de crowdfunding.  
+2. Recopilar documentació financera.
+3. Contactar amb entitats bancàries i inversors.
+4. Sol·licitar subvencions i ajuts públics.
+5. Llançar campanya de crowdfunding.
 """
     st.download_button(
         "Descarrega Guia Finançament (PDF)", guia_fin,
         file_name="guia_financament.pdf", mime="application/pdf"
     )
+
     if st.button("Continuar"):
         next_page()
 
