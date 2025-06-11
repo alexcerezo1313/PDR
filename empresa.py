@@ -126,19 +126,15 @@ def pagina_capital():
         st.write(f"- Inversions fixes (50%): {capital * 0.5:.2f} €")
         st.write(f"- Fons de maniobra (30%): {capital * 0.3:.2f} €")
         st.write(f"- Reserves i imprevistos (20%): {capital * 0.2:.2f} €")
-    # Fonts de finançament
-    st.markdown(
-        "**Fonts de finançament:**
-"
-        "• Capital propi: estalvis i reinversió.
-"
-        "• Capital aliè: préstecs bancaris, business angels, venture capital.
-"
-        "• Subvencions i ajuts: programes públics i europeus.
-"
-        "• Crowdfunding: campanyes col·lectives."
-    )
-    # Guia de finançament per descarregar
+        # Fonts de finançament
+    st.markdown("""
+**Fonts de finançament:**
+• Capital propi: estalvis i reinversió.
+• Capital aliè: préstecs bancaris, business angels, venture capital.
+• Subvencions i ajuts: programes públics i europeus.
+• Crowdfunding: campanyes col·lectives.
+""")
+    # Guia de finançament per descarregar per descarregar
     guia_fin = """
 GUIA FINANÇAMENT - PAS A PAS
 1. Preparar un pla de negoci sòlid.
