@@ -161,18 +161,27 @@ def pagina_idea_mercat():
     st.markdown("Descriu la teva idea de negoci:")
     st.session_state.idea = st.text_input("Quina és la teva idea?", value=st.session_state.idea)
     st.markdown("Selecciona competidors clau:")
-    comps = st.multiselect("Competidors:", ["A","B","C"], default=st.session_state.competidors)
+    # sense default per evitar errors amb valors antics
+    comps = st.multiselect("Competidors:", ["Competidor A","Competidor B","Competidor C"])
     noms = []
-    for i, c in enumerate(comps): noms.append(st.text_input(f"Competidor {i+1}", value=c, key=f"c{i}"))
+    for i, c in enumerate(comps):
+        nom = st.text_input(f"Nom competidor {i+1}", value=c, key=f"c{i}")
+        noms.append(nom)
     st.session_state.competidors = noms
-    st.markdown(
-        "Guia idea: 1) Problema, 2) Solució, 3) Valor diferencial."
+    st.markdown("Guia idea: 1) Problema, 2) Solució, 3) Valor diferencial.")
+    st.session_state.market = st.selectbox(
+        "Estat del mercat:",
+        ["Saturat","Normal","En auge"],
+        index=["Saturat","Normal","En auge"].index(st.session_state.market) if st.session_state.market in ["Saturat","Normal","En auge"] else 1
     )
-    st.session_state.market = st.selectbox("Estat del mercat:", ["Saturat","Normal","En auge"], index=["Saturat","Normal","En auge"].index(st.session_state.market) if st.session_state.market else 1)
-    if st.session_state.market == "Saturat": st.write("Mercat saturat: molta competència i demanda estabilitzada.")
-    if st.session_state.market == "Normal": st.write("Mercat normal: equilibri oferta-demanda.")
-    if st.session_state.market == "En auge": st.write("Mercat en auge: pocs competidors i demanda creixent.")
-    if st.button("Continuar"): next_page()
+    if st.session_state.market == "Saturat":
+        st.write("Mercat saturat: molta competència i demanda estabilitzada.")
+    elif st.session_state.market == "Normal":
+        st.write("Mercat normal: equilibri oferta-demanda.")
+    else:
+        st.write("Mercat en auge: pocs competidors i demanda creixent.")
+    if st.button("Continuar"):
+        next_page()
 
 # -------- Pàgina 5 --------
 def pagina_personal():
