@@ -159,23 +159,34 @@ def pagina_personal():
     # Mostra organigrama generat
     st.image("organigrama.jpg", caption="Organigrama d'empresa", use_column_width=True)
     st.markdown(
-        "**Funcions:**\n"
-        "- **CEO:** defineix visió, repr. legal, direcció estratègica.\n"
-        "- **CTO:** lidera tecnologia, R+D, infraestructura.\n"
-        "- **CFO:** gestió financera, comptabilitat, anàlisi pressupost.\n"
+        "**Funcions:**
+"
+        "- **CEO:** defineix visió, repr. legal, direcció estratègica.
+"
+        "- **CTO:** lidera tecnologia, R+D, infraestructura.
+"
+        "- **CFO:** gestió financera, comptabilitat, anàlisi pressupost.
+"
         "- **COO:** coordina operacions, logística, qualitat."
     )
-    perfs = st.multiselect("Perfils necessaris:", ["Desenvolupador","Comercial","Admin","Operacions"], default=st.session_state.perfils)
+    perfs = st.multiselect(
+        "Perfils necessaris:",
+        ["Desenvolupador","Comercial","Administratiu","Operacions"],
+        default=st.session_state.perfils
+    )
     st.session_state.perfils = perfs
     st.markdown(
-        "**Perfils detallats:**\n"
-        "- **Desenvolupador:** arquitecte software, codifica producte, manté infraestructura.\n"
-        "- **Comercial:** estratègia vendes, CRM, fidelització client.\n"
-        "- **Administratiu:** nòmines, facturació, tràmits legals.\n"
+        "**Perfils detallats:**
+"
+        "- **Desenvolupador:** arquitecte software, codifica producte, manté infraestructura.
+"
+        "- **Comercial:** estratègia vendes, CRM, fidelització client.
+"
+        "- **Administratiu:** gestió financera, facturació, tràmits legals.
+"
         "- **Operacions:** organitza producció, magatzem, enviaments."
     )
-        nomina = """
-GESTIÓ NÒMINES I COTITZACIONS
+    nomina = """GESTIÓ NÒMINES I COTITZACIONS
 
 1. SALARI BRUT VS NET:
    - Brut: total remuneració abans retencions.
@@ -195,8 +206,12 @@ GESTIÓ NÒMINES I COTITZACIONS
    - Enviament mensual de TC2.
    - Declaracions trimestrals.
 """
-    st.download_button("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")
-    if st.button("Continuar"): next_page()
+    st.download_button(
+        "Descarrega PDF Nòmines", nomina,
+        file_name="nomines.pdf", mime="application/pdf"
+    )
+    if st.button("Continuar"):
+        next_page()
 
 # -------- Pàgina 6 --------
 def pagina_escalabilitat():
