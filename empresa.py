@@ -220,14 +220,15 @@ def pagina_altres_aspectes():
     # Resum de forma jurídica
     c.drawString(50, y, f"Forma jurídica: {st.session_state.forma}")
     y -= 20
-    # Idea detallada
+        # Idea detallada
     c.drawString(50, y, "Idea de negoci:")
     y -= 15
     text = st.session_state.detailed_idea or "-"
     for line in text.split("
 "):
         if y < 50:
-            c.showPage(); y = height - 50
+            c.showPage()
+            y = height - 50
         c.drawString(60, y, line)
         y -= 15
     # Competidors
