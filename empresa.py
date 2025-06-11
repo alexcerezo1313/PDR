@@ -174,22 +174,28 @@ def pagina_personal():
         "- **Administratiu:** nòmines, facturació, tràmits legals.\n"
         "- **Operacions:** organitza producció, magatzem, enviaments."
     )
-    nomina = """
+        nomina = """
 GESTIÓ NÒMINES I COTITZACIONS
 
 1. SALARI BRUT VS NET:
-   - Brut: total remuneració abans retencions.\n   - Net: import després IRPF.
+   - Brut: total remuneració abans retencions.
+   - Net: import després IRPF.
 
 2. IRPF:
-   - % segons salari i situació personal.\n
+   - % segons salari i situació personal.
+
 3. COTITZACIONS SS:
-   - Empresa: ~30%.\n   - Treballador: ~6.35%.
+   - Empresa: ~30%.
+   - Treballador: ~6.35%.
 
 4. TIPUS CONTRACTES:
-   - Indefinit, temporal, formació.\n
+   - Indefinit, temporal, formació.
+
 5. TRÀMITS TGSS:
-   - Enviament mensual de TC2.\n   - Declaracions trimestrals."
-    st.download_button("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")
+   - Enviament mensual de TC2.
+   - Declaracions trimestrals.
+"""
+    st.download_button("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")
     if st.button("Continuar"): next_page()
 
 # -------- Pàgina 6 --------
