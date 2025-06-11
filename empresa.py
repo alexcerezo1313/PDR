@@ -1,242 +1,250 @@
+# Basat en el document de referència PDR.pdf
+# Fitxer: empresa.py
+
 import streamlit as st
 
-# Configuración de la página
 st.set_page_config(
-    page_title="Guía Creación y Crecimiento de Empresa",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Guia Creació i Creixement d'Empresa",
+    layout="wide"
 )
 
-# --- Carga de PDF de referencia (PDR.pdf) ---
-@st.cache_data
-def load_pdf(path):
-    with open(path, "rb") as f:
-        return f.read()
+PAGES = [
+    "Introducció",
+    "Requeriments Legals",
+    "Capital i Finançament",
+    "Idea i Mercat",
+    "Personal",
+    "Escalabilitat",
+    "Altres Aspectes Clau"
+]
 
-pdf_bytes = load_pdf("PDR.pdf")
-
-# --- Textos centralizados extraídos de PDR.pdf y ampliados ---
-TEXTS = {
-    "intro": (
-        "Crear una empresa es un proceso que abarca desde la idea hasta el crecimiento. "
-        "Incluye aspectos legales, financieros, estratégicos, de mercado y de gestión de recursos humanos."
-    ),
-    "req_summary": (
-        "- Formas jurídicas (SL: capital mín. 3.000€; SA: capital mín. 60.000€; Autónomo: sin capital mín.)\n"
-        "- Permisos y licencias (apertura, sanitarios, ambientales)\n"
-        "- Protección de datos (RGPD, LOPDGDD) y registro de marca/patentes (OEPM)\n"
-        "- Obligaciones contables y fiscales"
-    ),
-    "req_detail": (
-        "1. FORMAS JURÍDICAS:\n"
-        "   • Sociedad Limitada (SL): responsabilidad limitada, capital mín. 3.000€.\n"
-        "   • Sociedad Anónima (SA): acciones transferibles, capital mín. 60.000€.\n"
-        "   • Autónomo: alta en RETA, responsabilidad personal.\n\n"
-        "2. PERMISOS Y LICENCIAS:\n"
-        "   • Licencia de apertura: trámite municipal.\n"
-        "   • Permisos sanitarios: manipulación de alimentos.\n"
-        "   • Autorización medioambiental: actividades con impacto.\n\n"
-        "3. PROTECCIÓN DE DATOS Y PROPIEDAD INTELECTUAL:\n"
-        "   • Políticas internas y derechos ARCO (RGPD, LOPDGDD).\n"
-        "   • Registro de marca y patentes en OEPM."
-    ),
-    "fin_summary": (
-        "- Fuentes propias: ahorro, reservas.\n"
-        "- Fuentes ajenas: préstamos bancarios, business angels, venture capital.\n"
-        "- Subvenciones públicas y crowdfunding."
-    ),
-    "idea_summary": (
-        "1. Definir problema y solución.\n"
-        "2. Realizar brainstorming y estudios de caso.\n"
-        "3. Validar con feedback (clientes, expertos).\n"
-        "4. Analizar competidores para diferenciarse."
-    ),
-    "personal_summary": (
-        "- Reclutamiento: definir perfil y publicar ofertas.\n"
-        "- Formación: cursos, mentoring y "sombra" de expertos.\n"
-        "- Retención: salario competitivo, incentivos, ambiente.\n"
-        "- Protocolos: manejo de conflictos y emergencias."
-    ),
-    "escal_summary": (
-        "1. Estandarizar procesos y automatizar (ERP/CRM).\n"
-        "2. Delegar con organigrama claro.\n"
-        "3. KPI para medir y ajustar.\n"
-        "4. Uso de tecnología y comunicación centralizada."
-    ),
-    "otros_summary": (
-        "- Elaborar presupuestos (escenarios optimista, realista, pesimista).\n"
-        "- Análisis de riesgos y planes de contingencia.\n"
-        "- Seguros adecuados y networking empresarial."
-    ),
-    "practica": (
-        "La parte práctica implica: \n"
-        "• Crear tu plan de negocio en plantilla editable.\n"
-        "• Calendarizar pasos y responsables.\n"
-        "• Realizar checklists de trámites.\n"
-        "• Herramientas recomendadas: Trello, Notion, Google Sheets."
-    ),
-    "conclusiones": (
-        "1. Definir tu propuesta de valor y validar mercado.\n"
-        "2. Elegir forma jurídica y asegurar permisos.\n"
-        "3. Plan financiero sólido y diversificar financiación.\n"
-        "4. Formar un equipo motivado y KPI claros.\n"
-        "5. Emplear tecnología para escalar eficientemente."
-    ),
-    "referencias": (
-        "- Álex Cerezo Porta, \"L'empresa: Creació i desenvolupament\" (PDR.pdf)\n"
-        "- Agencia Tributaria (AEAT)\n"
-        "- OEPM: Registro de Marcas y Patentes\n"
-        "- RGPD y LOPDGDD (BOE)"
-    )
-}
-
-# Lista de páginas
+# Inicialitzar estat
 def init_state():
-    defaults = { 'page': 0, 'forma': None, 'capital': 0.0, 'target': 0.0,
-                 'idea': '', 'competidores': [], 'market': None, 'perfils': [] }
+    defaults = {
+        'page': 0,
+        'forma': "",
+        'capital': 0.0,
+        'target_capital': 0.0,
+        'idea': "",
+        'competidors': [],
+        'market': "",
+        'perfils': [],
+        'delegations': 1
+    }
     for k, v in defaults.items():
         if k not in st.session_state:
             st.session_state[k] = v
 init_state()
 
-PAGES = [
-    "Introducción",
-    "Requerimientos Legales",
-    "Capital y Financiación",
-    "Idea y Mercado",
-    "Personal",
-    "Escalabilidad",
-    "Otros Aspectos Clave",
-    "Parte Práctica",
-    "Conclusiones",
-    "Referencias"
-]
-
-# Navegación lateral
 def next_page():
     if st.session_state.page < len(PAGES) - 1:
         st.session_state.page += 1
 
-# Sidebar
-st.sidebar.title("Contenido")
-# Barra de progreso
-total = len(PAGES)
-current = st.session_state.page + 1
-st.sidebar.progress(current / total)
-selection = st.sidebar.radio("Secciones:", PAGES, index=st.session_state.page)
+st.sidebar.title("Navegació")
+selection = st.sidebar.radio("Passos:", PAGES, index=st.session_state.page)
 st.session_state.page = PAGES.index(selection)
-# Descarga PDR completo
-st.sidebar.download_button("Descargar PDR completo", pdf_bytes,
-                           file_name="PDR.pdf", mime="application/pdf")
+st.sidebar.write(f"Pàgina {st.session_state.page+1} de {len(PAGES)}")
 
-# Botón de navegación común
-def nav_button(label="Continuar"):
-    if st.button(label):
+# -------- Pàgina 1 --------
+def pagina_introduccio():
+    st.title("Crea la teva empresa des d'aquí")
+    st.markdown(
+        "Una empresa és una organització o entitat econòmica que, dotada de personalitat jurídica, "
+        "realitza activitats productives o comercials amb l'objectiu de generar valor, riquesa i ocupació. "
+        "Opera en un entorn de mercat per satisfer necessitats dels consumidors, assumint riscos i responsabilitats legals."
+    )
+    st.markdown(
+        "Les empreses poden ser de propietat individual o col·lectiva, públiques o privades, "
+        "i s'organitzen segons diferents formes jurídiques que defineixen la seva estructura, fiscalitat i responsabilitat."
+    )
+    if st.button("Continuar"):
         next_page()
 
-# --- Definición de páginas ---
+# -------- Pàgina 2 --------
+def pagina_requeriments_legals():
+    st.header("1. Requeriments Legals")
+    st.markdown(
+        "**Formes jurídiques:**\n"
+        "- **Societat Limitada (SL):** capital mínim 3.000€, responsabilitat limitada als aportacions. Ideal per pimes.\n"
+        "- **Societat Anònima (SA):** capital mínim 60.000€, accions transferibles. Recomanada per grans projectes.\n"
+        "- **Autònom:** alta fàcil a la Seguretat Social, responsabilitat il·limitada, menys formalitats."
+    )
+    st.markdown(
+        "**Permisos i llicències:**\n"
+        "- **Llicència d'obertura:** autorització municipal per establiments.\n"
+        "- **Permisos sanitaris:** obligatori per activitats alimentàries i sanitàries.\n"
+        "- **Autorització mediambiental:** per activitats amb emissions o gestió de residus."
+    )
+    st.markdown(
+        "**Protecció de dades i propietat intel·lectual:** RGPD, LOPDGDD, registre de marques i patents al OEPM."
+    )
+    detall_doc = """
+REQUERIMENTS LEGALS - GUIA COMPLETA
 
-def page_introduccion():
-    st.title("Crea tu empresa paso a paso")
-    st.markdown(TEXTS["intro"])
-    nav_button()
+1. FORMES JURÍDIQUES:
+   • SL: capital mínim 3.000€, escriptura, registre mercantil.
+   • SA: capital mínim 60.000€, accions transmissibles.
+   • Autònom: alta RETA, sense capital.
 
+2. PERMISOS I LLICÈNCIES:
+   • Obertura: ajuntament.
+   • Sanitaris: Depart. Salut.
+   • Medi ambient: Depart. Medi Ambient.
 
-def page_requerimientos():
-    st.header("1. Requerimientos Legales")
-    with st.expander("Ver detalle completo"):
-        st.code(TEXTS["req_detail"])
-    st.markdown("**Resumen rápido:**")
-    st.markdown(TEXTS["req_summary"])
-    nav_button()
+3. RGPD I PROPIETAT INTEL·LECTUAL:
+   • RGPD i LOPDGDD: polítiques, drets ARCO.
+   • Marques i patents: OEPM.
+"""
+    st.download_button(
+        "Descarrega Requeriments Legals (PDF)", detall_doc,
+        file_name="requeriments_legals.pdf", mime="application/pdf"
+    )
+    forma = st.selectbox("Forma jurídica:", ["SL","SA","Autònom"],
+                         index=["SL","SA","Autònom"].index(st.session_state.forma) if st.session_state.forma else 0)
+    st.session_state.forma = forma
+    st.write(f"Has seleccionat: **{forma}**")
+    if st.button("Continuar"):
+        next_page()
 
+# -------- Pàgina 3 --------
+def pagina_capital():
+    st.header("2. Capital i Finançament")
+    st.markdown("Introdueix el capital obtingut (de moment) i l'objectiu de capital:")
+    st.session_state.capital = st.number_input("Capital obtingut (de moment) (€):", min_value=0.0,
+                                               value=st.session_state.capital, step=100.0)
+    st.session_state.target_capital = st.number_input("Capital objectiu (€):", min_value=0.0,
+                                                     value=st.session_state.target_capital, step=100.0)
+    if st.session_state.capital > 0:
+        st.write("### Recomanacions d’assignació de fons:")
+        st.write(f"- Inversions fixes (50%): {st.session_state.capital*0.5:.2f} €")
+        st.write(f"- Fons de maniobra (30%): {st.session_state.capital*0.3:.2f} €")
+        st.write(f"- Reserves i imprevistos (20%): {st.session_state.capital*0.2:.2f} €")
+    st.markdown(
+        "**Fonts de finançament:**\n"
+        "• Capital propi: estalvis i reinversió.\n"
+        "• Capital aliè: préstecs, business angels, venture capital.\n"
+        "• Subvencions: ajuts públics.\n"
+        "• Crowdfunding: campanyes col·lectives."
+    )
+    guia_fin = """
+GUIA FINANÇAMENT - PAS A PAS
+1. Pla de negoci complet.\n2. Contacte bancari amb dossier.\n3. Pitch a inversors.\n4. Sol·licitud ajuts.\n5. Campanya crowdfunding."
+    st.download_button("Descarrega Guia Finançament (PDF)", guia_fin,
+                       file_name="guia_financament.pdf", mime="application/pdf")
+    if st.button("Continuar"):
+        next_page()
 
-def page_capital():
-    st.header("2. Capital y Financiación")
-    col1, col2 = st.columns([2,1])
-    with col1:
-        st.write("Introduzca los datos de capital:")
-        cap = st.number_input("Capital actual (€)", value=st.session_state.capital, step=100.0)
-        tgt = st.number_input("Objetivo de capital (€)", value=st.session_state.target, step=100.0)
-        st.session_state.capital, st.session_state.target = cap, tgt
-    with col2:
-        if cap > 0:
-            st.metric("Inversiones fijas (50%)", f"{cap*0.5:.2f} €")
-            st.metric("Fondo maniobra (30%)", f"{cap*0.3:.2f} €")
-            st.metric("Reservas (20%)", f"{cap*0.2:.2f} €")
-        else:
-            st.info("Introduce capital > 0 para ver recomendaciones")
-    st.markdown("**Fuentes de financiación:**")
-    st.markdown(TEXTS["fin_summary"])
-    nav_button()
+# -------- Pàgina 4 --------
+def pagina_idea_mercat():
+    st.header("3. Idea i Mercat")
+    st.markdown("Descriu la teva idea de negoci:")
+    st.session_state.idea = st.text_input("Quina és la teva idea?", value=st.session_state.idea)
+    st.markdown("Selecciona competidors clau:")
+    comps = st.multiselect("Competidors:", ["A","B","C"], default=st.session_state.competidors)
+    noms = []
+    for i, c in enumerate(comps): noms.append(st.text_input(f"Competidor {i+1}", value=c, key=f"c{i}"))
+    st.session_state.competidors = noms
+    st.markdown(
+        "Guia idea: 1) Problema, 2) Solució, 3) Valor diferencial."
+    )
+    st.session_state.market = st.selectbox("Estat del mercat:", ["Saturat","Normal","En auge"], index=["Saturat","Normal","En auge"].index(st.session_state.market) if st.session_state.market else 1)
+    if st.session_state.market == "Saturat": st.write("Mercat saturat: molta competència i demanda estabilitzada.")
+    if st.session_state.market == "Normal": st.write("Mercat normal: equilibri oferta-demanda.")
+    if st.session_state.market == "En auge": st.write("Mercat en auge: pocs competidors i demanda creixent.")
+    if st.button("Continuar"): next_page()
 
-
-def page_idea_mercado():
-    st.header("3. Idea y Mercado")
-    st.text_input("Describe tu idea de negocio:", value=st.session_state.idea, key="idea")
-    compet = st.multiselect("Competidores clave:", ["Competidor A","B","C"], key="competidores")
-    st.session_state.competidores = compet
-    st.markdown(TEXTS["idea_summary"])
-    market = st.selectbox("Estado del mercado:", ["Saturado","Normal","En auge"], key="market")
-    colors = {"Saturado":"🔴","Normal":"🟠","En auge":"🟢"}
-    st.write(f"{colors[market]} {market}")
-    nav_button()
-
-
-def page_personal():
+# -------- Pàgina 5 --------
+def pagina_personal():
     st.header("4. Personal")
-    st.image("organigrama.png", caption="Organigrama típico", use_column_width=True)
-    perfils = st.multiselect("Perfiles necesarios:", ["Desarrollador","Comercial","Administrativo","Operaciones"], key="perfils")
-    st.session_state.perfils = perfils
-    st.markdown(TEXTS["personal_summary"])
-    nav_button()
+    # Mostra organigrama generat
+    st.image("organigrama.jpg", caption="Organigrama d'empresa", use_column_width=True)
+    st.markdown(
+        "**Funcions:**\n"
+        "- **CEO:** defineix visió, repr. legal, direcció estratègica.\n"
+        "- **CTO:** lidera tecnologia, R+D, infraestructura.\n"
+        "- **CFO:** gestió financera, comptabilitat, anàlisi pressupost.\n"
+        "- **COO:** coordina operacions, logística, qualitat."
+    )
+    perfs = st.multiselect("Perfils necessaris:", ["Desenvolupador","Comercial","Admin","Operacions"], default=st.session_state.perfils)
+    st.session_state.perfils = perfs
+    st.markdown(
+        "**Perfils detallats:**\n"
+        "- **Desenvolupador:** arquitecte software, codifica producte, manté infraestructura.\n"
+        "- **Comercial:** estratègia vendes, CRM, fidelització client.\n"
+        "- **Administratiu:** nòmines, facturació, tràmits legals.\n"
+        "- **Operacions:** organitza producció, magatzem, enviaments."
+    )
+    nomina = """
+GESTIÓ NÒMINES I COTITZACIONS
 
+1. SALARI BRUT VS NET:
+   - Brut: total remuneració abans retencions.\n   - Net: import després IRPF.
 
-def page_escalabilidad():
-    st.header("5. Escalabilidad")
-    with st.expander("Ver consejos clave"):
-        st.markdown(TEXTS["escal_summary"])
-    nav_button()
+2. IRPF:
+   - % segons salari i situació personal.\n
+3. COTITZACIONS SS:
+   - Empresa: ~30%.\n   - Treballador: ~6.35%.
 
+4. TIPUS CONTRACTES:
+   - Indefinit, temporal, formació.\n
+5. TRÀMITS TGSS:
+   - Enviament mensual de TC2.\n   - Declaracions trimestrals."
+    st.download_button("Descarrega PDF Nòmines", nomina, file_name="nomines.pdf", mime="application/pdf")
+    if st.button("Continuar"): next_page()
 
-def page_otros():
-    st.header("6. Otros Aspectos Clave")
-    st.markdown(TEXTS["otros_summary"])
-    nav_button()
+# -------- Pàgina 6 --------
+def pagina_escalabilitat():
+    st.header("5. Escalabilitat")
+    st.markdown(
+        "**Consells per escalar mantenint eficiència:**\n"
+        "1. Documenta i estandarditza processos.\n"
+        "2. Implanta ERP i CRM per automatitzar.\n"
+        "3. Assigna responsabilitats clares a equips.\n"
+        "4. Forma contínuament al personal.\n"
+        "5. Mantén estructures planes i flexibles.\n"
+        "6. Utilitza KPI per a presa de decisions.\n"
+        "7. Diversifica canals de venda.\n"
+        "8. Externalitza tasques no estratègiques.\n"
+        "9. Cerques aliances i col·laboracions.\n"
+        "10. Planifica recursos segons pics de demanda."
+    )
+    if st.button("Continuar"): next_page()
 
+# -------- Pàgina 7 --------
+def pagina_altres_aspectes():
+    st.header("6. Resum Final")
+    if st.button("Mostrar Resum"):
+        st.write(f"**Forma jurídica:** {st.session_state.forma}")
+        st.write(f"**Capital obtingut:** {st.session_state.capital} € (objectiu {st.session_state.target_capital} €)")
+        st.write(f"**Idea:** {st.session_state.idea}")
+        st.write(f"**Competidors:** {', '.join(st.session_state.competidors)}")
+        st.write(f"**Estat mercat:** {st.session_state.market}")
+        st.write(f"**Perfils:** {', '.join(st.session_state.perfils)}")
+        # Consells mercat
+        if st.session_state.market == "Saturat": st.write("Consell: innovació i diferenciació.")
+        if st.session_state.market == "Normal": st.write("Consell: consolida quotes i optimitza.")
+        if st.session_state.market == "En auge": st.write("Consell: aprofita creixement i expedició ràpida.")
+        st.markdown(
+            "**Resum i consells generals:**\n"
+            "1. Clarifica valor diferencial.\n"
+            "2. Estableix objectius clars.\n"
+            "3. Escull estructura jurídica òptima.\n"
+            "4. Diversifica finançament.\n"
+            "5. Valida amb estudi de mercat.\n"
+            "6. Forma equip equilibrat.\n"
+            "7. Automatitza i externalitza.\n"
+            "8. Mantén focus en qualitat.\n"
+            "9. Mesura i ajusta KPI.\n"
+            "10. Fomenta innovació contínua."
+        )
 
-def page_practica():
-    st.header("7. Parte Práctica")
-    st.markdown(TEXTS["practica"])
-    nav_button()
-
-
-def page_conclusiones():
-    st.header("8. Conclusiones")
-    st.markdown(TEXTS["conclusiones"])
-    nav_button()
-
-
-def page_referencias():
-    st.header("9. Referencias")
-    st.markdown(TEXTS["referencias"])
-    # Enlace al PDF original
-    st.download_button("Ver PDR original", pdf_bytes,
-                       file_name="PDR.pdf", mime="application/pdf")
-
-# Mapeo de funciones
 func_map = {
-    "Introducción": page_introduccion,
-    "Requerimientos Legales": page_requerimientos,
-    "Capital y Financiación": page_capital,
-    "Idea y Mercado": page_idea_mercado,
-    "Personal": page_personal,
-    "Escalabilidad": page_escalabilidad,
-    "Otros Aspectos Clave": page_otros,
-    "Parte Práctica": page_practica,
-    "Conclusiones": page_conclusiones,
-    "Referencias": page_referencias
+    "Introducció": pagina_introduccio,
+    "Requeriments Legals": pagina_requeriments_legals,
+    "Capital i Finançament": pagina_capital,
+    "Idea i Mercat": pagina_idea_mercat,
+    "Personal": pagina_personal,
+    "Escalabilitat": pagina_escalabilitat,
+    "Altres Aspectes Clau": pagina_altres_aspectes
 }
-
-# Ejecución de la página seleccionada
 func_map[selection]()
